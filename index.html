@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Expense Tracker — See exactly where your money goes</title>
+  <meta name="description" content="A clean, fast expense tracker with charts, categories, and local storage. No sign-up, no backend — your data stays in your browser." />
+  <link rel="stylesheet" href="style.css" />
+  <!-- Chart.js for the spending charts (loaded from CDN) -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <div class="app">
+    <!-- ============ HEADER ============ -->
+    <header class="header">
+      <div class="brand">
+        <span class="brand-icon">💸</span>
+        <div>
+          <h1>Expense Tracker</h1>
+          <p class="subtitle">See exactly where your money goes</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button id="export-btn" class="btn btn-ghost" title="Download your expenses as CSV">⬇ Export CSV</button>
+        <button id="add-btn" class="btn btn-primary">+ Add expense</button>
+      </div>
+    </header>
+
+    <!-- ============ STAT CARDS ============ -->
+    <section class="stats">
+      <div class="stat-card">
+        <span class="stat-label">Spent this month</span>
+        <span class="stat-value" id="stat-total">$0.00</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Transactions</span>
+        <span class="stat-value" id="stat-count">0</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Top category</span>
+        <span class="stat-value" id="stat-top">—</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Daily average</span>
+        <span class="stat-value" id="stat-avg">$0.00</span>
+      </div>
+    </section>
+
+    <!-- ============ CHARTS ============ -->
+    <section class="charts">
+      <div class="card chart-card">
+        <h2>Spending by category</h2>
+        <div class="chart-wrap"><canvas id="category-chart"></canvas></div>
+      </div>
+      <div class="card chart-card">
+        <h2>Last 14 days</h2>
+        <div class="chart-wrap"><canvas id="trend-chart"></canvas></div>
+      </div>
+    </section>
+
+    <!-- ============ EXPENSE LIST ============ -->
+    <section class="card">
+      <div class="list-header">
+        <h2>Transactions</h2>
+        <div class="filters">
+          <input type="search" id="search" placeholder="🔍 Search expenses…" aria-label="Search expenses" />
+          <select id="filter-category" aria-label="Filter by category">
+            <option value="all">All categories</option>
+          </select>
+        </div>
+      </div>
+      <ul id="expense-list" class="expense-list"></ul>
+      <p id="empty-state" class="empty-state hidden">
+        No expenses yet. Hit <strong>+ Add expense</strong> to log your first one. 🎉
+      </p>
+    </section>
+
+    <footer class="footer">
+      <p>Built with HTML, CSS &amp; vanilla JavaScript · Data never leaves your browser</p>
+    </footer>
+  </div>
+
+  <!-- ============ ADD-EXPENSE MODAL ============ -->
+  <div id="modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-box">
+      <div class="modal-head">
+        <h2 id="modal-title">Add expense</h2>
+        <button id="modal-close" class="icon-btn" aria-label="Close">✕</button>
+      </div>
+      <form id="expense-form">
+        <label>
+          Description
+          <input type="text" id="field-desc" placeholder="e.g. Groceries at Loblaws" required maxlength="60" />
+        </label>
+        <div class="form-row">
+          <label>
+            Amount ($)
+            <input type="number" id="field-amount" placeholder="0.00" min="0.01" step="0.01" required />
+          </label>
+          <label>
+            Date
+            <input type="date" id="field-date" required />
+          </label>
+        </div>
+        <label>
+          Category
+          <select id="field-category"></select>
+        </label>
+        <p id="form-error" class="form-error hidden">Please fill in every field with a valid amount.</p>
+        <div class="modal-actions">
+          <button type="button" id="modal-cancel" class="btn btn-ghost">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save expense</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
